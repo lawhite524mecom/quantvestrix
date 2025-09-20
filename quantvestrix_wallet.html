@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUANTVESTRIX DNA Wallet - Multi-Chain Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat p {
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        .wallet-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .wallet-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .wallet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .wallet-card h3 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .balance {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .cost-comparison {
+            background: rgba(0,255,0,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .cost-savings {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .transaction-history {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-amount {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .tx-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+        }
+
+        .status-failed {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+        }
+
+        .dna-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .dna-strand {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: dnaFloat 10s linear infinite;
+        }
+
+        @keyframes dnaFloat {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .close {
+            color: rgba(255,255,255,0.7);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .wallet-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dna-animation" id="dnaAnimation"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🧬 QUANTVESTRIX DNA Wallet</h1>
+            <p>Multi-Chain Interface with FULL BURST Processing</p>
+
+            <div class="stats">
+                <div class="stat">
+                    <h3>0.099999999%</h3>
+                    <p>Transaction Cost</p>
+                </div>
+                <div class="stat">
+                    <h3>95-99%</h3>
+                    <p>Cost Savings</p>
+                </div>
+                <div class="stat">
+                    <h3>∞ TPS</h3>
+                    <p>FULL BURST</p>
+                </div>
+                <div class="stat">
+                    <h3>8+ Chains</h3>
+                    <p>Supported</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="wallet-section">
+            <!-- Bridge Transaction -->
+            <div class="wallet-card">
+                <h3>🔄 Cross-Chain Bridge</h3>
+                <div class="cost-comparison">
+                    <div class="cost-savings">
+                        💰 Save 95-99% on transaction fees!
+                    </div>
+                </div>
+
+                <form id="bridgeForm">
+                    <div class="form-group">
+                        <label for="fromChain">From Chain:</label>
+                        <select id="fromChain" name="fromChain" required>
+                            <option value="">Select Source Chain</option>
+                            <option value="ETHEREUM">Ethereum</option>
+                            <option value="POLYGON">Polygon</option>
+                            <option value="ARBITRUM">Arbitrum</option>
+                            <option value="OPTIMISM">Optimism</option>
+                            <option value="SOLANA">Solana</option>
+                            <option value="BITCOIN">Bitcoin</option>
+                            <option value="BSC">BNB Smart Chain</option>
+                            <option value="AVALANCHE">Avalanche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toChain">To Chain:</label>
+                        <select id="toChain" name="toChain" required>
+                            <option value="">Select Destination Chain</option>
+                            <option value="ETHEREUM">Ethereum</option>
+                            <option value="POLYGON">Polygon</option>
+                            <option value="ARBITRUM">Arbitrum</option>
+                            <option value="OPTIMISM">Optimism</option>
+                            <option value="SOLANA">Solana</option>
+                            <option value="BITCOIN">Bitcoin</option>
+                            <option value="BSC">BNB Smart Chain</option>
+                            <option value="AVALANCHE">Avalanche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bridgeAmount">Amount:</label>
+                        <input type="number" id="bridgeAmount" name="amount" step="0.000001" min="0" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bridgeRecipient">Recipient Address:</label>
+                        <input type="text" id="bridgeRecipient" name="recipient" placeholder="0x..." required>
+                    </div>
+
+                    <button type="submit" id="bridgeBtn">🚀 Execute Bridge</button>
+                </form>
+            </div>
+
+            <!-- Multi-Chain Transaction -->
+            <div class="wallet-card">
+                <h3>⚡ Multi-Chain Delivery</h3>
+                <div class="cost-comparison">
+                    <div class="cost-savings">
+                        🎯 Send to multiple chains simultaneously!
+                    </div>
+                </div>
+
+                <form id="multiChainForm">
+                    <div class="form-group">
+                        <label for="multiChains">Destination Chains:</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 10px;">
+                            <label><input type="checkbox" name="chains" value="ETHEREUM"> Ethereum</label>
+                            <label><input type="checkbox" name="chains" value="POLYGON"> Polygon</label>
+                            <label><input type="checkbox" name="chains" value="ARBITRUM"> Arbitrum</label>
+                            <label><input type="checkbox" name="chains" value="OPTIMISM"> Optimism</label>
+                            <label><input type="checkbox" name="chains" value="SOLANA"> Solana</label>
+                            <label><input type="checkbox" name="chains" value="BITCOIN"> Bitcoin</label>
+                            <label><input type="checkbox" name="chains" value="BSC"> BSC</label>
+                            <label><input type="checkbox" name="chains" value="AVALANCHE"> Avalanche</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="multiAmount">Amount per Chain:</label>
+                        <input type="number" id="multiAmount" name="amount" step="0.000001" min="0" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="multiRecipient">Recipient Address:</label>
+                        <input type="text" id="multiRecipient" name="recipient" placeholder="0x..." required>
+                    </div>
+
+                    <button type="submit" id="multiChainBtn">⚡ Multi-Chain Send</button>
+                </form>
+            </div>
+
+            <!-- Cost Calculator -->
+            <div class="wallet-card">
+                <h3>💰 Cost Calculator</h3>
+                <div class="balance">$1,000.00</div>
+
+                <div id="costResults">
+                    <div class="cost-comparison">
+                        <div>Traditional Cost: <span id="traditionalCost">$25.00 (2.5%)</span></div>
+                        <div>QUANTVESTRIX Cost: <span id="quantvestrixCost">$0.001 (0.0001%)</span></div>
+                        <div class="cost-savings">Savings: $24.999 (99.99%)</div>
+                    </div>
+                </div>
+
+                <form id="costForm">
+                    <div class="form-group">
+                        <label for="calcAmount">Amount to Send:</label>
+                        <input type="number" id="calcAmount" name="amount" step="0.01" min="0" value="1000" required>
+                    </div>
+
+                    <button type="submit">📊 Calculate Savings</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="transaction-history">
+            <h3>📋 Transaction History</h3>
+            <div id="transactionList">
+                <div class="transaction-item">
+                    <div>
+                        <div class="tx-amount">ETH → POLYGON</div>
+                        <div style="opacity: 0.7;">Bridge Transaction</div>
+                    </div>
+                    <div class="tx-status status-success">Success</div>
+                </div>
+                <div class="transaction-item">
+                    <div>
+                        <div class="tx-amount">Multi-Chain (4 chains)</div>
+                        <div style="opacity: 0.7;">Batch Transaction</div>
+                    </div>
+                    <div class="tx-status status-success">Success</div>
+                </div>
+                <div class="transaction-item">
+                    <div>
+                        <div class="tx-amount">SOL → BSC</div>
+                        <div style="opacity: 0.7;">Cross-chain Bridge</div>
+                    </div>
+                    <div class="tx-status status-pending">Pending</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>🎉 Transaction Successful!</h2>
+            <div id="modalContent"></div>
+            <button onclick="closeModal()" style="margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // DNA Animation
+        function createDNAAnimation() {
+            const animation = document.getElementById('dnaAnimation');
+            const numStrands = 20;
+
+            for (let i = 0; i < numStrands; i++) {
+                setTimeout(() => {
+                    const strand = document.createElement('div');
+                    strand.className = 'dna-strand';
+                    strand.style.left = Math.random() * 100 + '%';
+                    strand.style.animationDelay = Math.random() * 10 + 's';
+                    strand.style.animationDuration = (5 + Math.random() * 5) + 's';
+                    animation.appendChild(strand);
+
+                    setTimeout(() => {
+                        strand.remove();
+                    }, 15000);
+                }, i * 500);
+            }
+        }
+
+        // Initialize DNA animation
+        createDNAAnimation();
+        setInterval(createDNAAnimation, 10000);
+
+        // Cost Calculator
+        document.getElementById('costForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const amount = parseFloat(document.getElementById('calcAmount').value);
+            const traditionalCost = amount * 0.025; // 2.5%
+            const quantvestrixCost = amount * 0.00000099999999; // 0.099999999%
+            const savings = traditionalCost - quantvestrixCost;
+            const savingsPercent = (savings / traditionalCost * 100).toFixed(2);
+
+            document.getElementById('traditionalCost').textContent = `$${traditionalCost.toFixed(2)} (2.5%)`;
+            document.getElementById('quantvestrixCost').textContent = `$${quantvestrixCost.toFixed(3)} (0.0001%)`;
+
+            const savingsElement = document.querySelector('.cost-savings');
+            savingsElement.textContent = `Savings: $${savings.toFixed(2)} (${savingsPercent}%)`;
+        });
+
+        // Bridge Transaction
+        document.getElementById('bridgeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const button = document.getElementById('bridgeBtn');
+            button.disabled = true;
+            button.textContent = '🔄 Processing...';
+
+            try {
+                const response = await fetch('http://localhost:8890/bridge', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        fromChain: document.getElementById('fromChain').value,
+                        toChain: document.getElementById('toChain').value,
+                        amount: parseFloat(document.getElementById('bridgeAmount').value),
+                        recipient: document.getElementById('bridgeRecipient').value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showModal('Bridge Transaction Successful!',
+                        `Transaction ID: ${result.transactionId}<br>
+                        Cost: $${result.quantvestrixCost.toFixed(6)}<br>
+                        Savings: $${result.savings.toFixed(2)} (${result.savingsPercentage}%)<br>
+                        Processing Time: ${result.processingTime}ms`);
+                } else {
+                    alert('Transaction failed: ' + result.error);
+                }
+            } catch (error) {
+                alert('Network error: ' + error.message);
+            }
+
+            button.disabled = false;
+            button.textContent = '🚀 Execute Bridge';
+        });
+
+        // Multi-Chain Transaction
+        document.getElementById('multiChainForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const button = document.getElementById('multiChainBtn');
+            button.disabled = true;
+            button.textContent = '⚡ Processing...';
+
+            const checkboxes = document.querySelectorAll('input[name="chains"]:checked');
+            const chains = Array.from(checkboxes).map(cb => cb.value);
+
+            if (chains.length === 0) {
+                alert('Please select at least one destination chain');
+                button.disabled = false;
+                button.textContent = '⚡ Multi-Chain Send';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8890/multi-chain', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chains: chains,
+                        amount: parseFloat(document.getElementById('multiAmount').value),
+                        recipient: document.getElementById('multiRecipient').value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showModal('Multi-Chain Transaction Successful!',
+                        `Chains: ${result.chains.length}<br>
+                        Total Transactions: ${result.totalTransactions}<br>
+                        Total Cost: $${result.totalCost.toFixed(6)}<br>
+                        Total Savings: $${result.totalSavings.toFixed(2)}`);
+                } else {
+                    alert('Transaction failed: ' + result.error);
+                }
+            } catch (error) {
+                alert('Network error: ' + error.message);
+            }
+
+            button.disabled = false;
+            button.textContent = '⚡ Multi-Chain Send';
+        });
+
+        // Modal functions
+        function showModal(title, content) {
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('successModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('successModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        // Initialize cost calculator
+        document.getElementById('costForm').dispatchEvent(new Event('submit'));
+    </script>
+</body>
+</html>
