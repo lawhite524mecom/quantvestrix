@@ -9,8 +9,8 @@ echo "🚀 QUANTVESTRIX DNA Blockchain - GitHub Deployment"
 echo "=================================================="
 
 # Configuration
-GITHUB_TOKEN="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"
-GITHUB_USERNAME="lawhite524mecom"
+GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
+GITHUB_USERNAME="YOUR_GITHUB_USERNAME_HERE"
 
 # Repository URLs
 REPOSITORIES=(
@@ -640,11 +640,11 @@ echo "✅ quantvestrix-documentation (Complete docs)"
 echo "✅ quantvestrix-web-installer (Web installer)"
 echo ""
 echo "🌐 Access your repositories at:"
-echo "https://github.com/lawhite524mecom/quantvestrix"
-echo "https://github.com/lawhite524mecom/quantvestrix-core"
-echo "https://github.com/lawhite524mecom/quantvestrix-wallet"
-echo "https://github.com/lawhite524mecom/quantvestrix-documentation"
-echo "https://github.com/lawhite524mecom/quantvestrix-web-installer"
+echo "https://github.com/YOUR_USERNAME/quantvestrix"
+echo "https://github.com/YOUR_USERNAME/quantvestrix-core"
+echo "https://github.com/YOUR_USERNAME/quantvestrix-wallet"
+echo "https://github.com/YOUR_USERNAME/quantvestrix-documentation"
+echo "https://github.com/YOUR_USERNAME/quantvestrix-web-installer"
 echo ""
 echo "🚀 Ready for production deployment!"
 echo "🎯 Complete QUANTVESTRIX DNA Blockchain system deployed!"

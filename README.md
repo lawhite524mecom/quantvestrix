@@ -3,7 +3,7 @@
 **Revolutionary DNA-Inspired Blockchain with Quantum Processing**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2025.8.15.91819-blue.svg)](https://github.com/lawhite524mecom/quantvestrix)
+[![Version](https://img.shields.io/badge/version-2025.8.15.91819-blue.svg)](https://github.com/YOUR_USERNAME/quantvestrix)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
 
 > **Transform blockchain from 10 TPS limitations to unlimited FULL BURST capability while reducing costs by 95-99%**
@@ -33,7 +33,7 @@ QUANTVESTRIX is a revolutionary blockchain system that combines biological DNA s
 
 ```bash
 # Clone the repository
-git clone https://github.com/lawhite524mecom/quantvestrix.git
+git clone https://github.com/YOUR_USERNAME/quantvestrix.git
 cd quantvestrix
 
 # Install dependencies
@@ -239,7 +239,7 @@ POST /cost-comparison
 
 ```bash
 # Clone and setup
-git clone https://github.com/lawhite524mecom/quantvestrix.git
+git clone https://github.com/YOUR_USERNAME/quantvestrix.git
 cd quantvestrix
 npm run install:all
 
@@ -292,9 +292,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [quantvestrix-documentation](https://github.com/lawhite524mecom/quantvestrix-documentation)
-- **Issues**: [GitHub Issues](https://github.com/lawhite524mecom/quantvestrix/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/lawhite524mecom/quantvestrix/discussions)
+- **Documentation**: [quantvestrix-documentation](https://github.com/YOUR_USERNAME/quantvestrix-documentation)
+- **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/quantvestrix/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/YOUR_USERNAME/quantvestrix/discussions)
 
 ## 🎯 Roadmap
 

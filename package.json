@@ -50,10 +50,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lawhite524mecom/quantvestrix.git"
+    "url": "https://github.com/YOUR_USERNAME/quantvestrix.git"
   },
   "bugs": {
-    "url": "https://github.com/lawhite524mecom/quantvestrix/issues"
+    "url": "https://github.com/YOUR_USERNAME/quantvestrix/issues"
   },
-  "homepage": "https://github.com/lawhite524mecom/quantvestrix#readme"
+  "homepage": "https://github.com/YOUR_USERNAME/quantvestrix#readme"
 }
